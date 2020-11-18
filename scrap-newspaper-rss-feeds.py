@@ -26,6 +26,7 @@ def start_scraping_rss(FIRST_RUN):
 
     '''
     This function scraps the RSS-Feeds as defined in parameters.py. It needs a parameter FIRST_RUN, which is a boolean.
+    Start it with "python scrap-newspaper-rss-feeds.py True"
     '''
     ### Preprocess
     dict_of_feeds = zip(NAME_OF_FEEDS, RSS_FEEDS)
