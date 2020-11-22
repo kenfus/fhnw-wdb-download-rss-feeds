@@ -38,7 +38,7 @@ def start_scraping_rss(FIRST_RUN=True):
     ###
     
     while RUNNING:
-        if FIRST_RUN == 'True':
+        if eval(FIRST_RUN):
             FIRST_RUN = False
             for name_newspaper, url_rss in dict_of_feeds:
                 d = feedparser.parse(url_rss)
