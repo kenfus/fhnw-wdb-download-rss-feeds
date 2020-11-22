@@ -21,8 +21,9 @@ def dt_to_str(dt, time_format = "%Y/%m/%d, %H:%M:%S"):
     return dt.strftime(time_format)
 
 
+
 ###Main Function
-def start_scraping_rss(FIRST_RUN):
+def start_scraping_rss(FIRST_RUN=True):
 
     '''
     This function scraps the RSS-Feeds as defined in parameters.py. It needs a parameter FIRST_RUN, which is a boolean.
@@ -37,7 +38,7 @@ def start_scraping_rss(FIRST_RUN):
     ###
     
     while RUNNING:
-        if FIRST_RUN:
+        if FIRST_RUN == 'True':
             FIRST_RUN = False
             for name_newspaper, url_rss in dict_of_feeds:
                 d = feedparser.parse(url_rss)
@@ -77,13 +78,14 @@ def start_scraping_rss(FIRST_RUN):
             df.drop_duplicates(inplace=True) # Drop Duplicates because currently its not smart with dates. Many RSS-Feeds don't tell us when it was updated. 
             df.sort_values(by=['Newspaper', 'date'], inplace=True)
             df.to_csv(BACKUP_FILE_PATH_NAME, index = False)
-            df.drop_duplicates(subset = 'Newspapers', keep = 'last', inplace=True) # Keep one entry per newspapers. Keep the newest ones, which are appended at the end of the Dataframe.
+            df.drop_duplicates(subset = 'Newspaper', keep = 'last', inplace=True) # Keep one entry per newspapers. Keep the newest ones, which are appended at the end of the Dataframe.
 
             next_backup = datetime.now() + timedelta(minutes=BACKUP_TIME)
-            print("Backup done!")
-        print("Sleeping....")
+            print("Backup done at ", datetime.now(), ".")
         time.sleep(SECONDS_TO_SLEEP_FOR_NEXT_REQUEST)
         
 if __name__ == "__main__":
-    start_scraping_rss(sys.argv[0])
+    print("Starting with First Run = ", sys.argv[1])
+    assert sys.argv[1] in (['True', 'False']), 'Only True or False is accepted.'
+    start_scraping_rss(sys.argv[1])
 
